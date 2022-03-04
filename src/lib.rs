@@ -25,7 +25,6 @@
 #![warn(clippy::unnecessary_wraps)]
 //#![warn(clippy::missing_errors_doc)]
 //![warn(missing_docs)]
-#![forbid(unsafe_code)]
 #![doc(html_root_url = "https://docs.rs/raytracing_n/0.1.0")]
 
 //#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]

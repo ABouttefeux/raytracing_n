@@ -3,6 +3,7 @@
 pub mod ray;
 
 use std::iter::FusedIterator;
+use std::mem::{forget, MaybeUninit};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use num_traits::{Float, FloatConst, Zero};
@@ -78,6 +79,19 @@ impl<T, const N: usize> Vector<T, N> {
     }
 }
 
+impl<T: Neg + Clone, const N: usize> Vector<T, N>
+where
+    <T as Neg>::Output: Default + Copy,
+{
+    pub fn old_neg(self) -> Vector<<T as Neg>::Output, N> {
+        let mut vec = Vector::default();
+        self.iter()
+            .zip(vec.data.iter_mut())
+            .for_each(|(el_1, el_2)| *el_2 = -el_1.clone());
+        vec
+    }
+}
+
 impl<T: Send + Sync, const N: usize> Vector<T, N> {
     pub fn par_iter(&self) -> impl ParallelIterator<Item = &T> + IndexedParallelIterator {
         self.data.par_iter()
@@ -109,7 +123,7 @@ where
 {
     /// Gives the norm squared, i.e. the some of each elemqne squared
     pub fn norm_squared(&self) -> T {
-        self.iter().map(|el| el.clone() * el.clone()).sum()
+        self.iter().map(|el| *el * *el).sum()
     }
 
     pub fn norm(&self) -> T {
@@ -141,7 +155,7 @@ where
     T: Float + Clone + std::iter::Sum + Sync + Send,
 {
     pub fn par_norm_squared(&self) -> T {
-        self.par_iter().map(|el| el.clone() * el.clone()).sum()
+        self.par_iter().map(|el| *el * *el).sum()
     }
 
     pub fn par_norm(&self) -> T {
@@ -190,18 +204,23 @@ impl<T: SubAssign, const N: usize> SubAssign for Vector<T, N> {
 }
 
 // TODO review
-impl<T: Neg + Clone, const N: usize> Neg for Vector<T, N>
-where
-    <T as Neg>::Output: Default + Copy,
-{
+impl<T: Neg, const N: usize> Neg for Vector<T, N> {
     type Output = Vector<<T as Neg>::Output, N>;
 
     fn neg(self) -> Self::Output {
-        let mut vec = Vector::default();
-        self.iter()
-            .zip(vec.data.iter_mut())
-            .for_each(|(el_1, el_2)| *el_2 = -el_1.clone());
-        vec
+        // copied for std lib
+        let mut array = unsafe { MaybeUninit::<[MaybeUninit<_>; N]>::uninit().assume_init() };
+        self.into_iter()
+            .zip(array.iter_mut())
+            .for_each(|(el_1, el_2)| {
+                el_2.write(-el_1);
+            });
+        //Vector::new(unsafe { transmute::<_, [<T as Neg>::Output; N]>(array) })
+        let ptr =
+            &array as *const [MaybeUninit<<T as Neg>::Output>; N] as *const [<T as Neg>::Output; N];
+        let result = Vector::new(unsafe { std::ptr::read(ptr) });
+        forget(array);
+        result
     }
 }
 
@@ -277,7 +296,7 @@ impl<T: Zero + Copy + AddAssign, const N: usize> Zero for Vector<T, N> {
 
 impl<F: Float, const N: usize> Transformable<F, N> for Vector<F, N> {
     fn position(&self) -> &Vector<F, N> {
-        &self
+        self
     }
 }
 
@@ -286,4 +305,18 @@ impl<F: Float, const N: usize> Transformable<F, N> for Vector<F, N> {
 // TODO FromIterator IntoIterator
 
 #[cfg(test)]
-mod test {}
+mod test {
+    use super::*;
+
+    #[test]
+    fn negative() {
+        let v = Vector::new([1_i32, 2_i32, -3_i32]);
+        assert_eq!(-v, Vector::new([-1_i32, -2_i32, 3_i32]));
+
+        let v = Vector::new([1_f32, 2_f32, -3_f32]);
+        assert_eq!(-v, Vector::new([-1_f32, -2_f32, 3_f32]));
+
+        let v = Vector::new([0_i128, 1_231_i128, -3_342_432_i128]);
+        assert_eq!(-v, Vector::new([0_i128, -1_231_i128, 3_342_432_i128]));
+    }
+}
