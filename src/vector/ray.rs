@@ -1,9 +1,11 @@
-use super::Vector;
-use crate::utils::{Norm, Normed};
+use std::ops::Div;
+
 use num_traits::Float;
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
-use std::ops::Div;
+
+use super::Vector;
+use crate::utils::{Norm, Normed};
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]

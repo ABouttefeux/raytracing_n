@@ -1,9 +1,11 @@
-use crate::vector::Vector;
+use std::error::Error;
+use std::num::FpCategory;
+
 use num_traits::Float;
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
-use std::error::Error;
-use std::num::FpCategory;
+
+use crate::vector::Vector;
 
 /// Error return by the [`Plane::new`] function.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]

@@ -1,10 +1,12 @@
 //! Defines the class [`Angle`]
 
-use crate::utils::number::n_2;
+use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+
 use num_traits::{Float, FloatConst, Zero};
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
-use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+
+use crate::utils::number::n_2;
 
 /// Get the euclidean reminder
 ///
@@ -138,7 +140,7 @@ impl<F: Float + FloatConst> Angle<F> {
     /// assert_abs_diff_eq!(*angle.radiant(), std::f64::consts::PI);
     ///
     /// angle.set_radiant(std::f64::consts::PI * 5_f64 / 2_f64);
-    /// assert_abs_diff_eq!(*angle.radiant(), std::f64::consts::PI /2_f64);
+    /// assert_abs_diff_eq!(*angle.radiant(), std::f64::consts::PI / 2_f64);
     /// ```
     pub fn set_radiant(&mut self, radiant: F) {
         self.radiant = rem_euclidean(radiant, F::PI() * n_2());
@@ -147,7 +149,6 @@ impl<F: Float + FloatConst> Angle<F> {
     /// Wraps the wrapped value such that the it is between `[0, 2PI[`.
     ///
     /// # Example
-    ///
     fn mod_radiant(&mut self) {
         self.radiant = rem_euclidean(self.radiant, F::PI() * n_2());
     }
@@ -255,8 +256,9 @@ impl<F: Float + FloatConst> Zero for Angle<F> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use approx::assert_abs_diff_eq;
+
+    use super::*;
 
     #[test]
     fn angle_mod_radiant() {

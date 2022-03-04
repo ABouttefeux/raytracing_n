@@ -1,9 +1,10 @@
 //! Defines [`Triangle`].
 
-use crate::vector::Vector;
 use num_traits::Float;
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
+
+use crate::vector::Vector;
 
 /// A triangle
 ///

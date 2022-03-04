@@ -2,13 +2,15 @@
 //! and some transformation.
 // TODO
 
-use crate::angle::Angle;
-use crate::object::Plane;
-use crate::vector::Vector;
+use std::ops::AddAssign;
+
 use num_traits::{Float, FloatConst};
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
-use std::ops::AddAssign;
+
+use crate::angle::Angle;
+use crate::object::Plane;
+use crate::vector::Vector;
 
 pub trait Transformation<F: Float, T: Transformable<F, N> + ?Sized, const N: usize> {
     /// Error type of the transformation

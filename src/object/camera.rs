@@ -1,13 +1,15 @@
 //! Modules that defines the [`Camera`] structures and everithin that is needed for it.
 
+use std::ops::SubAssign;
+
+use num_traits::{Float, FloatConst};
+#[cfg(feature = "serde-serialize")]
+use serde::{Deserialize, Serialize};
+
 use crate::angle::Angle;
 use crate::object::Plane;
 use crate::transformation::Transformable;
 use crate::vector::Vector;
-use num_traits::{Float, FloatConst};
-#[cfg(feature = "serde-serialize")]
-use serde::{Deserialize, Serialize};
-use std::ops::SubAssign;
 
 /// The camera defines wher will be projecting the rays and rendering the sreen.
 ///

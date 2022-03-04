@@ -2,15 +2,17 @@
 
 pub mod ray;
 
-use crate::angle::Angle;
-use crate::transformation::Transformable;
-use crate::utils::number::n_2;
+use std::iter::FusedIterator;
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+
 use num_traits::{Float, FloatConst, Zero};
 use rayon::prelude::*;
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
-use std::iter::FusedIterator;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+
+use crate::angle::Angle;
+use crate::transformation::Transformable;
+use crate::utils::number::n_2;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
@@ -46,13 +48,13 @@ impl<T, const N: usize> Vector<T, N> {
     /// let vec = Vector::<f64, 0>::new([]);
     /// assert!(vec.is_empty());
     ///
-    /// let vec = Vector::new([1,2,3]);
+    /// let vec = Vector::new([1, 2, 3]);
     /// assert!(!vec.is_empty());
     ///
-    /// let vec = Vector::new(['a','b','c']);
+    /// let vec = Vector::new(['a', 'b', 'c']);
     /// assert!(!vec.is_empty());
     ///
-    /// let vec = Vector::new(["v1","banana","energy"]);
+    /// let vec = Vector::new(["v1", "banana", "energy"]);
     /// assert!(!vec.is_empty());
     /// ```
     pub const fn is_empty(&self) -> bool {

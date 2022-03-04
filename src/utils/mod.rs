@@ -1,12 +1,14 @@
 //! utils fonction and structures
 
-use crate::vector::Vector;
-use num_traits::{Float, Zero};
-#[cfg(feature = "serde-serialize")]
-use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 use std::ops::Div;
+
+use num_traits::{Float, Zero};
+#[cfg(feature = "serde-serialize")]
+use serde::{Deserialize, Serialize};
+
+use crate::vector::Vector;
 
 pub mod number;
 

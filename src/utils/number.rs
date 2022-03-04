@@ -1,7 +1,8 @@
 //! module containing generic number.
 
-use num_traits::One;
 use std::ops::Add;
+
+use num_traits::One;
 
 pub fn n_2<O: One + Add<Output = O>>() -> O {
     O::one() + O::one()
