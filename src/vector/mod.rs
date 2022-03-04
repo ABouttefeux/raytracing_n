@@ -261,36 +261,6 @@ impl<T: DivAssign + Clone, const N: usize> Div<T> for Vector<T, N> {
     }
 }
 
-/*impl<T: DivAssign + Clone, const N: usize> Div<Vector<T, N>> for T {
-    type Output = Vector<T, N>;
-    fn div(self, other: Vector<T, N>) -> Self::Output {
-        other / self
-    }
-}*/
-
-// TODO review
-mod div_f64 {
-    use super::*;
-    type T = f64;
-    impl<const N: usize> Div<Vector<T, N>> for T {
-        type Output = Vector<T, N>; // TODO review
-        fn div(self, other: Vector<T, N>) -> Self::Output {
-            other / self
-        }
-    }
-}
-
-mod div_f32 {
-    use super::*;
-    type T = f32; // TODO review
-    impl<const N: usize> Div<Vector<T, N>> for T {
-        type Output = Vector<T, N>;
-        fn div(self, other: Vector<T, N>) -> Self::Output {
-            other / self
-        }
-    }
-}
-
 impl<T: Zero + Copy + AddAssign, const N: usize> Zero for Vector<T, N> {
     fn zero() -> Self {
         Self {

@@ -5,20 +5,23 @@ use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::num::FpCategory;
 
+/// Error return by the [`Plane::new`] function.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
 pub enum PlaneBuildingError {
-    /// the two vectors are colinear
+    /// The two vectors are colinear.
+    ///
+    /// And therefore cannot define a plane.
     ColinearVector,
     /// A vector has a norm that is too small i.e. [`FpCategory::Zero`] or i.e. [`FpCategory::Subzero`]
     NormTooSmall,
     /// The norm is not clasify as normal, i.e. [`FpCategory::Infinite`]
-    // [`FpCategory::Nan`]
+    /// or [`FpCategory::Nan`]
     NotNormalNorm,
 }
 
-impl core::fmt::Display for PlaneBuildingError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+impl std::fmt::Display for PlaneBuildingError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::ColinearVector => write!(f, "the vectors are colinear"),
             Self::NormTooSmall => write!(f, "at least one vector has a norm that is too small"),
@@ -29,11 +32,24 @@ impl core::fmt::Display for PlaneBuildingError {
 
 impl Error for PlaneBuildingError {}
 
+/// Define a plane in the space.
+///
+/// It is defined by two non null vectors that are not colinear.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]
+#[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
 pub struct Plane<F: Float, const N: usize> {
     vecs: [Vector<F, N>; 2],
 }
 impl<F: Float + std::iter::Sum, const N: usize> Plane<F, N> {
+    /// Try creating a plane from two vectors.
+    ///
+    /// # Errors
+    /// - [`PlaneBuildingError::ColinearVector`] if the two vectors are colinear.
+    /// - [`PlaneBuildingError::NormTooSmall`] if the norm of at least one vector is too small.
+    /// - [`PlaneBuildingError::NotNormalNorm`] if the norm of at least one vector is infinite or NaN.
+    ///
+    /// # Examples
+    // TODO
     pub fn new(v1: Vector<F, N>, v2: Vector<F, N>) -> Result<Self, PlaneBuildingError> {
         match v1.norm().classify() {
             FpCategory::Subnormal | FpCategory::Zero => {
@@ -64,6 +80,7 @@ impl<F: Float + std::iter::Sum, const N: usize> Plane<F, N> {
 }
 
 impl<F: Float, const N: usize> Plane<F, N> {
+    /// Return the two vectors defining the plane.
     pub fn vectors(&self) -> &[Vector<F, N>; 2] {
         &self.vecs
     }

@@ -1,3 +1,5 @@
+//! module containing generic number.
+
 use num_traits::One;
 use std::ops::Add;
 
@@ -29,6 +31,7 @@ pub fn n_128<O: One + Add<Output = O>>() -> O {
     n_64::<O>() * n_2::<O>()
 }
 
+/// Get 180.
 pub fn n_180<O: One + Add<Output = O>>() -> O {
     n_4::<O>() + n_16::<O>() + n_32::<O>() + n_128::<O>()
 }

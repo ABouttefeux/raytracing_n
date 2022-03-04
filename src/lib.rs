@@ -39,3 +39,8 @@ pub mod vector;
 
 #[cfg(test)]
 mod test;
+
+pub use angle::Angle;
+pub use vector::Vector;
+
+// TODO __rust_force_expr!

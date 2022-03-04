@@ -1,3 +1,5 @@
+//! utils fonction and structures
+
 use crate::vector::Vector;
 use num_traits::{Float, Zero};
 #[cfg(feature = "serde-serialize")]
@@ -8,10 +10,10 @@ use std::ops::Div;
 
 pub mod number;
 
-/// Type that can never be (safly) initialized.
+/// A type that can never be (safly) initialized.
 /// This is temporary, until
 /// [`never`](https://doc.rust-lang.org/std/primitive.never.html)
-///  is accepted into stable rust.
+/// is accepted into stable rust.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
 pub enum Never {}
@@ -24,7 +26,7 @@ impl Display for Never {
 
 impl Error for Never {}
 
-// TODO
+/// Error type return by set type functions.
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
@@ -57,6 +59,7 @@ impl<F: ?Sized + PartialOrd + Zero> Positive<F> {
         data > &F::zero()
     }
 
+    /// Create a new [`Positive`] with `data` if data is valide, otherwise return [`None`].
     pub fn new(data: F) -> Option<Self> {
         if Self::is_data_valide(&data) {
             Some(Self { data })
@@ -65,6 +68,7 @@ impl<F: ?Sized + PartialOrd + Zero> Positive<F> {
         }
     }
 
+    /// Get the data stored.
     pub fn data(&self) -> &F {
         &self.data
     }
@@ -110,6 +114,7 @@ impl<F: ?Sized + PartialOrd + Zero> NonNegative<F> {
         data >= &F::zero()
     }
 
+    /// Create a new [`NonNegative`] with `data` if data is valide, otherwise return [`None`].
     pub fn new(data: F) -> Option<Self> {
         if Self::is_data_valide(&data) {
             Some(Self { data })
@@ -118,6 +123,7 @@ impl<F: ?Sized + PartialOrd + Zero> NonNegative<F> {
         }
     }
 
+    /// Get the data stored.
     pub fn data(&self) -> &F {
         &self.data
     }
@@ -137,7 +143,11 @@ impl<F: ?Sized + PartialOrd + Zero> NonNegative<F> {
 }
 
 /// A trait to get a norm a a element.
-/// TODO math prop
+///
+/// A norm p(x) is defined by the following properties:
+/// 1. p(x + y) <= p(x) + p(y) forall x,y
+/// 2. p(sx) = |s|p(x) forall x and scallar s
+/// 3. p(x) = 0 then x = 0
 pub trait Norm {
     /// The output type of the norm.
     type Output;
