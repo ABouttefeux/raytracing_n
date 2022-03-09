@@ -73,7 +73,7 @@ impl<F: Float + SubAssign + std::iter::Sum + FloatConst, const N: usize> Foccus<
 /// A plane that is oriented in the space.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
-pub struct OrientedPlane<F: Float + FloatConst, const N: usize> {
+pub struct OrientedOriginePlane<F: Float + FloatConst, const N: usize> {
     plane: Plane<F, N>,
     angle: Angle<F>,
 }

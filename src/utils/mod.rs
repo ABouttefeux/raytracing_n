@@ -2,6 +2,7 @@
 
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::num::FpCategory;
 use std::ops::Div;
 
 use num_traits::{Float, Zero};
@@ -189,7 +190,10 @@ where
 
 impl<T: Norm + Div<<T as Norm>::Output, Output = T>> Normed<T> {
     /// Normalise the data dans store it.
-    pub fn new(data: T) -> Self {
+    ///
+    /// # Panics
+    /// panics if the norm is zero or if the division would panic.
+    pub fn new_unchecked(data: T) -> Self {
         let norm = data.norm();
         Self { data: data / norm }
     }
@@ -197,5 +201,20 @@ impl<T: Norm + Div<<T as Norm>::Output, Output = T>> Normed<T> {
     /// Get the data. It is garanted to be normalized.
     pub fn data(&self) -> &T {
         &self.data
+    }
+}
+
+impl<T> Normed<T>
+where
+    T: Norm + Div<<T as Norm>::Output, Output = T>,
+    <T as Norm>::Output: Float,
+{
+    /// Try to normalize the data return [`None`] if the data is not [`FpCategory::Normal`].
+    pub fn new(data: T) -> Option<Self> {
+        let norm = data.norm();
+        match norm.classify() {
+            FpCategory::Normal => Some(Self { data: data / norm }),
+            _ => None,
+        }
     }
 }

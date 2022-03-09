@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+//
 #![warn(clippy::cast_sign_loss)]
 #![warn(clippy::cast_possible_truncation)]
 #![warn(clippy::cast_possible_wrap)]
@@ -24,7 +26,7 @@
 #![warn(clippy::unused_self)]
 #![warn(clippy::unnecessary_wraps)]
 //#![warn(clippy::missing_errors_doc)]
-//![warn(missing_docs)]
+//#![warn(missing_docs)]
 #![doc(html_root_url = "https://docs.rs/raytracing_n/0.1.0")]
 
 //#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]
@@ -32,14 +34,17 @@
 pub mod angle;
 pub mod direction;
 pub mod object;
+pub mod space;
 pub mod transformation;
 pub mod utils;
 pub mod vector;
+#[macro_use]
+mod macro_def;
 
 #[cfg(test)]
 mod test;
 
 pub use angle::Angle;
-pub use vector::Vector;
+pub use vector::{Ray, Vector};
 
 // TODO __rust_force_expr!

@@ -9,7 +9,7 @@ use num_traits::{Float, FloatConst};
 use serde::{Deserialize, Serialize};
 
 use crate::angle::Angle;
-use crate::object::Plane;
+use crate::object::OriginePlane;
 use crate::vector::Vector;
 
 pub trait Transformation<F: Float, T: Transformable<F, N> + ?Sized, const N: usize> {
@@ -86,14 +86,14 @@ pub struct Rotation<F: Float + FloatConst, const N: usize> {
     /// center of the rotation.
     center: Vector<F, N>, // TODO
     /// plane of rotation.
-    plane: Plane<F, N>, //TODO
+    plane: OriginePlane<F, N>, //TODO
 }
 
 impl<F: Float + FloatConst, const N: usize> Rotation<F, N> {
     /// - `angle` is the angle of the rotation.
     /// - `center` gives around wich point the rotation is done.
     /// - `plane` gives the plane the rotation is done in.
-    pub fn new(angle: Angle<F>, center: Vector<F, N>, plane: Plane<F, N>) -> Self {
+    pub fn new(angle: Angle<F>, center: Vector<F, N>, plane: OriginePlane<F, N>) -> Self {
         Self {
             angle,
             center,
@@ -112,12 +112,12 @@ impl<F: Float + FloatConst, const N: usize> Rotation<F, N> {
     }
 
     /// Get the plane of the rotation.
-    pub fn plane(&self) -> &Plane<F, N> {
+    pub fn plane(&self) -> &OriginePlane<F, N> {
         &self.plane
     }
 
     /// Get a mutable reference to the plane of the rotation.
-    pub fn plane_mut(&mut self) -> &mut Plane<F, N> {
+    pub fn plane_mut(&mut self) -> &mut OriginePlane<F, N> {
         &mut self.plane
     }
 

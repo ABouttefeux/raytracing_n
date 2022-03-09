@@ -7,6 +7,7 @@ use std::mem::{forget, MaybeUninit};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use num_traits::{Float, FloatConst, Zero};
+pub use ray::Ray;
 use rayon::prelude::*;
 #[cfg(feature = "serde-serialize")]
 use serde::{Deserialize, Serialize};
@@ -73,8 +74,13 @@ impl<T, const N: usize> Vector<T, N> {
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> + FusedIterator + ExactSizeIterator {
         self.data.iter_mut()
     }
+}
 
-    pub fn into_iter(self) -> impl Iterator<Item = T> + FusedIterator + ExactSizeIterator {
+impl<T, const N: usize> IntoIterator for Vector<T, N> {
+    type Item = <[T; N] as IntoIterator>::Item;
+    type IntoIter = <[T; N] as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
         self.data.into_iter()
     }
 }
