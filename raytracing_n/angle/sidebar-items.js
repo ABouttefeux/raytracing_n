@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["rem_euclidean","Get the euclidean reminder"]],"struct":[["Angle","Represent a angle in radiant."]]});

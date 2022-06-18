@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Rotation","Defines a rotation"],["Translation",""]],"trait":[["Transformable",""],["Transformation",""]]});

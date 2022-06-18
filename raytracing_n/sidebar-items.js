@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["angle","Defines the class [`Angle`]"],["direction",""],["object","Defines the object exhibiting in the space used for rendering."],["space",""],["transformation","Defines the traits [`Transformation`] and [`Transformable`] and some transformation."],["utils","utils function and structures"],["vector",""]]});
