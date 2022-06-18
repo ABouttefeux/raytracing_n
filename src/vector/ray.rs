@@ -24,7 +24,7 @@ where
     F: Float + Clone + std::iter::Sum,
     Vector<F, N>: Div<<Vector<F, N> as Norm>::Output, Output = Vector<F, N>>,
 {
-    pub fn new(starting_point: Vector<F, N>, direction: Normed<Vector<F, N>>) -> Self {
+    pub const fn new(starting_point: Vector<F, N>, direction: Normed<Vector<F, N>>) -> Self {
         Self {
             starting_point,
             direction,
@@ -41,11 +41,11 @@ where
         })
     }
 
-    pub fn starting_point(&self) -> &Vector<F, N> {
+    pub const fn starting_point(&self) -> &Vector<F, N> {
         &self.starting_point
     }
 
-    pub fn direction(&self) -> &Normed<Vector<F, N>> {
+    pub const fn direction(&self) -> &Normed<Vector<F, N>> {
         &self.direction
     }
 }

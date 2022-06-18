@@ -71,7 +71,7 @@ impl<F: Float + FloatConst> Angle<F> {
     }
 
     /// Get the value wrapped. It is guarenteed to be in `[0, 2PI[`.
-    pub fn radiant(&self) -> &F {
+    pub const fn radiant(&self) -> &F {
         &self.radiant
     }
 

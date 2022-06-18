@@ -24,7 +24,7 @@ impl<F: Float + FloatConst, const N: usize> Space<F, N> {
         self.objects.push(object);
     }
 
-    pub fn camera(&self) -> &Camera<F, N> {
+    pub const fn camera(&self) -> &Camera<F, N> {
         &self.camera
     }
 

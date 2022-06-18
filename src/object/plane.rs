@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::utils::Norm;
 use crate::{Ray, Vector};
 
-/// Error return by the [`Plane::new`] function.
+/// Error return by the [`OriginPlane::new`] function.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
 pub enum PlaneBuildingError {
@@ -19,7 +19,7 @@ pub enum PlaneBuildingError {
     ColinearVector,
     /// A vector has a norm that is too small i.e. [`FpCategory::Zero`] or i.e. [`FpCategory::Subzero`]
     NormTooSmall,
-    /// The norm is not clasify as normal, i.e. [`FpCategory::Infinite`]
+    /// The norm is not classify as normal, i.e. [`FpCategory::Infinite`]
     /// or [`FpCategory::Nan`]
     NotNormalNorm,
 }
@@ -41,10 +41,10 @@ impl Error for PlaneBuildingError {}
 /// It is defined by two non null vectors that are not colinear.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
-pub struct OriginePlane<F: Float, const N: usize> {
+pub struct OriginPlane<F: Float, const N: usize> {
     vecs: [Vector<F, N>; 2],
 }
-impl<F: Float + std::iter::Sum, const N: usize> OriginePlane<F, N> {
+impl<F: Float + std::iter::Sum, const N: usize> OriginPlane<F, N> {
     /// Try creating a plane from two vectors.
     ///
     /// # Errors
@@ -83,9 +83,9 @@ impl<F: Float + std::iter::Sum, const N: usize> OriginePlane<F, N> {
     }
 }
 
-impl<F: Float, const N: usize> OriginePlane<F, N> {
+impl<F: Float, const N: usize> OriginPlane<F, N> {
     /// Return the two vectors defining the plane.
-    pub fn vectors(&self) -> &[Vector<F, N>; 2] {
+    pub const fn vectors(&self) -> &[Vector<F, N>; 2] {
         &self.vecs
     }
 }
@@ -100,29 +100,29 @@ pub struct Plane<F: Float, const N: usize> {
 }
 
 impl<F: Float, const N: usize> Plane<F, N> {
-    pub fn new_tree_points(vecs: Vector<Vector<F, N>, 3>) -> Self {
+    pub const fn new_tree_points(vecs: Vector<Vector<F, N>, 3>) -> Self {
         Self {
             data: PlaneEnum::ThreePoints(vecs),
         }
     }
 
-    pub fn new_origine_plane_with_offset(
-        origine_plane: OriginePlane<F, N>,
+    pub const fn new_origin_plane_with_offset(
+        origin_plane: OriginPlane<F, N>,
         offset: Vector<F, N>,
     ) -> Self {
         Self {
-            data: PlaneEnum::OriginePlanePlaneWithOffset(OriginePlanePlaneWithOffset::new(
-                origine_plane,
+            data: PlaneEnum::OriginPlanePlaneWithOffset(OriginPlanePlaneWithOffset::new(
+                origin_plane,
                 offset,
             )),
         }
     }
 
-    pub fn new_origine_plane_with_offset_struct(
-        plant_with_offset: OriginePlanePlaneWithOffset<F, N>,
+    pub const fn new_origin_plane_with_offset_struct(
+        plant_with_offset: OriginPlanePlaneWithOffset<F, N>,
     ) -> Self {
         Self {
-            data: PlaneEnum::OriginePlanePlaneWithOffset(plant_with_offset),
+            data: PlaneEnum::OriginPlanePlaneWithOffset(plant_with_offset),
         }
     }
 
@@ -130,8 +130,8 @@ impl<F: Float, const N: usize> Plane<F, N> {
         self.data.tree_points()
     }
 
-    pub fn origine_plane_with_offset(self) -> OriginePlanePlaneWithOffset<F, N> {
-        self.data.origine_plane_with_offset()
+    pub fn origin_plane_with_offset(self) -> OriginPlanePlaneWithOffset<F, N> {
+        self.data.origin_plane_with_offset()
     }
 }
 
@@ -149,48 +149,46 @@ where
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
 enum PlaneEnum<F: Float, const N: usize> {
     ThreePoints(Vector<Vector<F, N>, 3>),
-    OriginePlanePlaneWithOffset(OriginePlanePlaneWithOffset<F, N>),
+    OriginPlanePlaneWithOffset(OriginPlanePlaneWithOffset<F, N>),
 }
 
 impl<F: Float, const N: usize> PlaneEnum<F, N> {
     pub fn tree_points(self) -> Vector<Vector<F, N>, 3> {
         match self {
             Self::ThreePoints(tree_points) => tree_points,
-            Self::OriginePlanePlaneWithOffset(origine_plane_with_offset) => todo!(),
+            Self::OriginPlanePlaneWithOffset(origin_plane_with_offset) => todo!(),
         }
     }
 
-    pub fn origine_plane_with_offset(self) -> OriginePlanePlaneWithOffset<F, N> {
+    pub fn origin_plane_with_offset(self) -> OriginPlanePlaneWithOffset<F, N> {
         match self {
             Self::ThreePoints(tree_points) => todo!(),
-            Self::OriginePlanePlaneWithOffset(origine_plane_with_offset) => {
-                origine_plane_with_offset
-            }
+            Self::OriginPlanePlaneWithOffset(origin_plane_with_offset) => origin_plane_with_offset,
         }
     }
 }
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
-pub struct OriginePlanePlaneWithOffset<F: Float, const N: usize> {
-    pub plane: OriginePlane<F, N>,
+pub struct OriginPlanePlaneWithOffset<F: Float, const N: usize> {
+    pub plane: OriginPlane<F, N>,
     pub offset: Vector<F, N>,
 }
 
-impl<F: Float, const N: usize> OriginePlanePlaneWithOffset<F, N> {
-    pub fn new(plane: OriginePlane<F, N>, offset: Vector<F, N>) -> Self {
+impl<F: Float, const N: usize> OriginPlanePlaneWithOffset<F, N> {
+    pub const fn new(plane: OriginPlane<F, N>, offset: Vector<F, N>) -> Self {
         Self { plane, offset }
     }
 
-    pub fn plane(&self) -> &OriginePlane<F, N> {
+    pub const fn plane(&self) -> &OriginPlane<F, N> {
         &self.plane
     }
 
-    pub fn offset(&self) -> &Vector<F, N> {
+    pub const fn offset(&self) -> &Vector<F, N> {
         &self.offset
     }
 
-    pub fn plane_mut(&mut self) -> &mut OriginePlane<F, N> {
+    pub fn plane_mut(&mut self) -> &mut OriginPlane<F, N> {
         &mut self.plane
     }
 
@@ -198,7 +196,7 @@ impl<F: Float, const N: usize> OriginePlanePlaneWithOffset<F, N> {
         &mut self.offset
     }
 
-    pub fn decontruct(self) -> (OriginePlane<F, N>, Vector<F, N>) {
+    pub const fn deconstruct(self) -> (OriginPlane<F, N>, Vector<F, N>) {
         (self.plane, self.offset)
     }
 }

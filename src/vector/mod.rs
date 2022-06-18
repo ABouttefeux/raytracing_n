@@ -127,7 +127,7 @@ impl<T, const N: usize> Vector<T, N>
 where
     T: Float + Clone + std::iter::Sum,
 {
-    /// Gives the norm squared, i.e. the some of each elemqne squared
+    /// Gives the norm squared, i.e. the some of each element squared
     pub fn norm_squared(&self) -> T {
         self.iter().map(|el| *el * *el).sum()
     }

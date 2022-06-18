@@ -11,9 +11,9 @@ use crate::object::Plane;
 use crate::transformation::Transformable;
 use crate::vector::Vector;
 
-/// The camera defines wher will be projecting the rays and rendering the sreen.
+/// The camera defines where will be projecting the rays and rendering the screen.
 ///
-/// It contains many informations like the directon of observation...
+/// It contains many information like the direction of observation...
 /// TODO
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
@@ -27,12 +27,12 @@ pub struct Camera<F: Float + FloatConst, const N: usize> {
     min_dist: F,
     focal_distance: F,
     fog: F,
-    foccus: Foccus<F, N>, // TODO better name
+    focus: Focus<F, N>, // TODO better name
 }
 
 impl<F: Float + FloatConst, const N: usize> Camera<F, N> {
     /// Get the position of the camera.
-    pub fn position(&self) -> &Vector<F, N> {
+    pub const fn position(&self) -> &Vector<F, N> {
         &self.position
     }
 
@@ -50,18 +50,18 @@ impl<F: Float + FloatConst, const N: usize> Transformable<F, N> for Camera<F, N>
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
-enum Foccus<F: Float, const N: usize> {
+enum Focus<F: Float, const N: usize> {
     RefPoint(Vector<F, N>),
     Distance(F),
 }
 
-// impl<F: Float + Default, const N: usize> Default for Foccus<F, N> {
+// impl<F: Float + Default, const N: usize> Default for Focus<F, N> {
 //     fn default() -> Self {
 //         Self::Distance(F::default())
 //     }
 // }
 
-impl<F: Float + SubAssign + std::iter::Sum + FloatConst, const N: usize> Foccus<F, N> {
+impl<F: Float + SubAssign + std::iter::Sum + FloatConst, const N: usize> Focus<F, N> {
     pub fn distance(&self, camera: &Camera<F, N>) -> F {
         match self {
             Self::Distance(d) => *d,
@@ -73,7 +73,7 @@ impl<F: Float + SubAssign + std::iter::Sum + FloatConst, const N: usize> Foccus<
 /// A plane that is oriented in the space.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde-serialize", derive(Serialize, Deserialize))]
-pub struct OrientedOriginePlane<F: Float + FloatConst, const N: usize> {
+pub struct OrientedOriginPlane<F: Float + FloatConst, const N: usize> {
     plane: Plane<F, N>,
     angle: Angle<F>,
 }
