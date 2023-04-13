@@ -3,10 +3,12 @@
 use num_traits::{Float, FloatConst};
 
 mod camera;
+mod hyperplane;
 mod plane;
 mod triangle;
 
 pub use camera::*;
+pub use hyperplane::*;
 pub use plane::*;
 pub use triangle::*;
 
