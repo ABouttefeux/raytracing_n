@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["rem_euclidean"],"struct":["Angle"]};
